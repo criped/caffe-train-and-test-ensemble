@@ -5,18 +5,16 @@ Created on Sat Mar 10 17:21:38 2018
 @author: root
 """
 
-#Set up the Python environment: we'll use the pylab import for numpy and plot inline.
+# Set up the Python environment: we'll use the pylab import for numpy and plot inline.
 from pylab import *
-
 import sys
+
 sys.path.insert(0, caffe_root + 'python')
 import caffe
 from caffe.proto import caffe_pb2
 
-import base_solver
 import numpy as np
 import time
-import lmdb
 
 #Import caffe, adding it to sys.path if needed. Make sure you've built pycaffe.
 caffe_root = '<caffe_root_path>'  # this file should be run from {caffe_root}/examples (otherwise change this line)
@@ -130,11 +128,11 @@ test_interval = 1
 test_acc = []
 for it in range(n_nets_in_ensemble):
     
-    print 'Testing batch it {}...'.format(it)
+    print('Testing batch it {}...'.format(it))
  
     matrices_labels = []
     for idx, model_weights in enumerate(ensemble_weights):           
-        print "Net {} loaded".format(idx)
+        print("Net {} loaded".format(idx))
         solver = None  # ignore this workaround for lmdb data (can't instantiate two solvers on the same data)
         solver = caffe.get_solver(solver_path)
         solver.net.copy_from(model_weights)
@@ -144,7 +142,7 @@ for it in range(n_nets_in_ensemble):
         predictions, ground_truth_batch = test_by_solver(solver, it)
         matrices_labels.append(predictions)
         
-    print "Testing ensemble it {}...".format(it)
+    print("Testing ensemble it {}...".format(it))
     
     accuracy = ensemble_accuracy(matrices_labels, ground_truth_batch)
     test_acc.append(accuracy)# When test net's batch size is 100
@@ -152,10 +150,12 @@ for it in range(n_nets_in_ensemble):
     actual_accuracy = 0
     actual_accuracy += sum(predictions == ground_truth_batch)
                                          
-    print "It {}, Ensemble accuracy achieved = {} ; isolated accuracy = {} ; accuracy layer = {}".format(it, accuracy, actual_accuracy/1e2, solver.test_nets[0].blobs['accuracy'].data)
+    print("It {}, Ensemble accuracy achieved = {} ; isolated accuracy = {} ; accuracy layer = {}"
+          .format(it, accuracy, actual_accuracy/1e2, solver.test_nets[0].blobs['accuracy'].data))
 
     for i in range(len(matrices_labels)):
-        print "solver {} accuracy = {}".format(i, sum(matrices_labels[i] == ground_truth_batch))
+        print("solver {} accuracy = {}"
+              .format(i, sum(matrices_labels[i] == ground_truth_batch)))
         
     time.sleep(10)
     # Reset batches for the next test iteration

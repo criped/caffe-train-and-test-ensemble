@@ -5,12 +5,12 @@ Created on Tue Jan 16 20:58:06 2018
 @author: cristian
 """
 import os
+import sys
 
 from scipy import misc
 from sklearn.feature_extraction import image
-import sys
-from labelling_images import label_files_by_filename
 
+from preprocessing.label_images import label_files_by_filename
 
 patch_width = patch_height = 64
 
@@ -28,18 +28,18 @@ def generate_patches(directory, output_directory, n_patches):
         image_name = image_path.split(".")[0]
         image_format = image_path.split(".")[1]
         
-        print "Generating patches from image: " + image_path     
+        print("Generating patches from image: " + image_path)
         for x in range(n_patches):
             patch = patches[x,:,:,:]
             output_patch_path = (output_directory + image_name +
                                 "_patch_" + str(x) + "." + image_format) 
             misc.imsave(output_patch_path, patch)
  
- 
- 
- # Label both train and test set images, 0 for benign; 1 for malignant       
+
 def label_image_sets(input_directory):
-    
+    """
+    Label both train and test set images, 0 for benign; 1 for malignant
+    """
     parent_path = os.path.abspath(os.path.join(input_directory, os.pardir))
     
     if 'test' in input_directory:
@@ -50,11 +50,11 @@ def label_image_sets(input_directory):
     label_files_by_filename(input_directory, labels_file_path)
 
 
-"""
-Extracts patches for each image in both the train and testing directory and labels them.
-"""	
 if __name__ == "__main__":
-    
+    """
+    Extracts patches for each image in both the train and testing directory and labels them.
+    """
+
     if len(sys.argv) == 4:
         
         input_train_path = sys.argv[1] + 'train_initial/'
@@ -70,26 +70,13 @@ if __name__ == "__main__":
         label_image_sets(output_train_path)
         
     else:
-        print 'Error: Invalid Arguments. Default values will be used.'
-        n_patches = 1000
+        print("Error: Invalid Arguments. Default values will be used.")
+        n_patch = 1000
 
-        input_directory = ''
+        input_dir = ''
         
-        output_directory = ''
+        output_dir = ''
         
-        generate_patches(input_directory, output_directory, n_patches)
+        generate_patches(input_dir, output_dir, n_patch)
         
-        label_image_sets(output_directory)
-
-        
-
-        
-        
-        
-
-
-
-
-
-
-    
+        label_image_sets(output_dir)

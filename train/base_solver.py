@@ -11,6 +11,7 @@ Outputs the configured solver.
 
 from caffe.proto import caffe_pb2
 
+
 def default_SGDsolver(net_path):
     s = caffe_pb2.SolverParameter()
     
